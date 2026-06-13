@@ -216,6 +216,8 @@ async function main() {
     { key: 'site_description', value: 'Plataforma de Trámites Digitales' },
     { key: 'whatsapp', value: '5217411104223' },
     { key: 'support_email', value: 'soporte@tramfast.io' },
+    { key: 'telegram_token', value: '' },
+    { key: 'telegram_chat_id', value: '' },
   ];
   for (const config of configs) {
     await db.setting.upsert({

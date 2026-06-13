@@ -20,7 +20,10 @@ async function getTelegramConfig(): Promise<{ token: string; chatId: string } | 
 
 async function sendTelegramMessage(text: string): Promise<boolean> {
   const config = await getTelegramConfig();
-  if (!config) return false;
+  if (!config) {
+    console.warn('Telegram notification skipped: Missing config (token or chatId)');
+    return false;
+  }
   
   try {
     const res = await fetch(
@@ -35,8 +38,19 @@ async function sendTelegramMessage(text: string): Promise<boolean> {
         })
       }
     );
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error('Telegram API error:', {
+        status: res.status,
+        statusText: res.statusText,
+        error: errorData
+      });
+    }
+    
     return res.ok;
-  } catch {
+  } catch (error) {
+    console.error('Telegram fetch error:', error);
     return false;
   }
 }
