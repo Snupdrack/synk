@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  password     String
+  phone        String?
+  role         String   @default("user") // "user" or "admin"
+  balance      Float    @default(0)
+  active       Boolean  @default(true)
+  sessionToken String?  @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders       Order[]
+  transactions Transaction[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  icon      String   @default("📄")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services Service[]
+}
+
+model Service {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  description  String   @default("")
+  price        Float
+  deliveryTime String   @default("") // e.g. "10-45 MIN", "24/7 Instant", "2-3 Hrs"
+  categorySlug String
+  requiresData String   @default("[]") // JSON array of required field names
+  icon         String   @default("FileText") // Lucide icon name
+  sortOrder    Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category Category @relation(fields: [categorySlug], references: [slug])
+  orders   Order[]
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  userId     String
+  serviceId  String
+  status     String   @default("pending") // pending, processing, completed, cancelled
+  formData   String   @default("{}") // JSON object with user-filled form data
+  notes      String?
+  adminNotes String?
+  total      Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  service      Service       @relation(fields: [serviceId], references: [id])
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  orderId   String?
+  type      String // "deposit", "payment", "refund"
+  amount    Float
+  status    String   @default("pending") // pending, approved, rejected
+  reference String? // Payment reference/receipt
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id])
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @default("")
+}
