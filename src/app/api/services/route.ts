@@ -10,10 +10,33 @@ export async function GET() {
     });
     
     // Map requiresData to fields for frontend
-    const mappedServices = services.map(s => ({
-      ...s,
-      fields: s.requiresData,
-    }));
+    const mappedServices = services.map(s => {
+      let fields = [];
+      try {
+        fields = typeof s.requiresData === 'string' ? JSON.parse(s.requiresData) : s.requiresData;
+      } catch (e) {
+        console.error('Error parsing requiresData for service:', s.id, e);
+      }
+      
+      // If fields is just an array of strings (legacy), convert to field definitions
+      const normalizedFields = Array.isArray(fields) ? fields.map(f => {
+        if (typeof f === 'string') {
+          return {
+            key: f,
+            label: f.charAt(0).toUpperCase() + f.slice(1).replace(/_/g, ' '),
+            type: 'text',
+            required: true,
+            placeholder: ''
+          };
+        }
+        return f;
+      }) : [];
+
+      return {
+        ...s,
+        fields: JSON.stringify(normalizedFields),
+      };
+    });
     
     return NextResponse.json(mappedServices);
   } catch (error) {

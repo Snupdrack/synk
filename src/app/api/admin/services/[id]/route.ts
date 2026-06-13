@@ -39,9 +39,29 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       include: { category: true },
     });
 
+    let fields = [];
+    try {
+      fields = typeof service.requiresData === 'string' ? JSON.parse(service.requiresData) : service.requiresData;
+    } catch (e) {
+      console.error('Error parsing requiresData for service:', service.id, e);
+    }
+
+    const normalizedFields = Array.isArray(fields) ? fields.map(f => {
+      if (typeof f === 'string') {
+        return {
+          key: f,
+          label: f.charAt(0).toUpperCase() + f.slice(1).replace(/_/g, ' '),
+          type: 'text',
+          required: true,
+          placeholder: ''
+        };
+      }
+      return f;
+    }) : [];
+
     return NextResponse.json({
       ...service,
-      fields: service.requiresData
+      fields: JSON.stringify(normalizedFields)
     });
   } catch (error) {
     console.error('Update service error:', error);

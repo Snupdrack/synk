@@ -38,7 +38,13 @@ export function OrderFormView() {
     );
   }
 
-  const fields = JSON.parse(service.fields || '[]');
+  let fields = [];
+  try {
+    const rawFields = typeof service.fields === 'string' ? JSON.parse(service.fields || '[]') : service.fields;
+    fields = Array.isArray(rawFields) ? rawFields : [];
+  } catch (e) {
+    console.error('Error parsing service fields:', e);
+  }
   const hasBalance = user && user.balance >= service.price;
   const IconComp = iconMap[service.icon] || FileText;
 

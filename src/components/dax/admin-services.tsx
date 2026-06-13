@@ -53,7 +53,15 @@ export function AdminServices() {
       deliveryTime: service.deliveryTime, categorySlug: service.categorySlug || service.category?.slug || '', icon: service.icon,
       sortOrder: String(service.sortOrder), active: service.active,
     });
-    setFields(JSON.parse(service.fields || '[]'));
+    
+    let parsedFields = [];
+    try {
+      parsedFields = typeof service.fields === 'string' ? JSON.parse(service.fields || '[]') : service.fields;
+      if (!Array.isArray(parsedFields)) parsedFields = [];
+    } catch (e) {
+      console.error('Error parsing service fields in admin:', e);
+    }
+    setFields(parsedFields);
     setEditingId(service.id);
     setDialogOpen(true);
   };
