@@ -1,103 +1,39 @@
-import { db } from '@/lib/db';
+import { db } from './db';
 
-async function getTelegramConfig(): Promise<{ token: string; chatId: string } | null> {
+export async function sendTelegramNotification(text: string) {
   try {
     const settings = await db.setting.findMany({
       where: {
         key: { in: ['telegram_token', 'telegram_chat_id'] }
       }
     });
-    
-    const token = settings.find(s => s.key === 'telegram_token')?.value || process.env.TELEGRAM_BOT_TOKEN || '';
-    const chatId = settings.find(s => s.key === 'telegram_chat_id')?.value || process.env.TELEGRAM_CHAT_ID || '';
-    
-    if (!token || !chatId) return null;
-    return { token, chatId };
-  } catch {
-    return null;
-  }
-}
 
-async function sendTelegramMessage(text: string): Promise<boolean> {
-  const config = await getTelegramConfig();
-  if (!config) {
-    console.warn('Telegram notification skipped: Missing config (token or chatId)');
-    return false;
-  }
-  
-  try {
+    const token = settings.find(s => s.key === 'telegram_token')?.value;
+    const chatId = settings.find(s => s.key === 'telegram_chat_id')?.value;
+
+    if (!token || !chatId) {
+      console.warn('Telegram notifications skipped: token or chatId not configured in settings.');
+      return;
+    }
+
     const res = await fetch(
-      `https://api.telegram.org/bot${config.token}/sendMessage`,
+      `https://api.telegram.org/bot${token}/sendMessage`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: config.chatId,
+          chat_id: chatId,
           text,
           parse_mode: 'HTML'
         })
       }
     );
-    
+
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error('Telegram API error:', {
-        status: res.status,
-        statusText: res.statusText,
-        error: errorData
-      });
+      const error = await res.text();
+      console.error('Telegram API error:', error);
     }
-    
-    return res.ok;
-  } catch (error) {
-    console.error('Telegram fetch error:', error);
-    return false;
+  } catch (err) {
+    console.error('Failed to send Telegram notification:', err);
   }
-}
-
-export async function notifyNewUser(userName: string, email: string): Promise<boolean> {
-  return sendTelegramMessage(
-    `🆕 <b>Nuevo Usuario Registrado</b>\n\n` +
-    `👤 Nombre: ${userName}\n` +
-    `📧 Email: ${email}\n` +
-    `🕐 Fecha: ${new Date().toLocaleString('es-MX')}`
-  );
-}
-
-export async function notifyNewOrder(orderId: string, userName: string, serviceName: string, total: number): Promise<boolean> {
-  return sendTelegramMessage(
-    `📋 <b>Nuevo Pedido</b>\n\n` +
-    `🔢 ID: ${orderId}\n` +
-    `👤 Cliente: ${userName}\n` +
-    `📦 Servicio: ${serviceName}\n` +
-    `💰 Total: $${total.toFixed(2)}\n` +
-    `🕐 Fecha: ${new Date().toLocaleString('es-MX')}`
-  );
-}
-
-export async function notifyNewDeposit(userName: string, amount: number, reference: string): Promise<boolean> {
-  return sendTelegramMessage(
-    `💰 <b>Nueva Solicitud de Recarga</b>\n\n` +
-    `👤 Usuario: ${userName}\n` +
-    `💵 Monto: $${amount.toFixed(2)}\n` +
-    `🔗 Referencia: ${reference}\n` +
-    `🕐 Fecha: ${new Date().toLocaleString('es-MX')}`
-  );
-}
-
-export async function testTelegramNotification(): Promise<{ success: boolean; message: string }> {
-  const config = await getTelegramConfig();
-  if (!config) {
-    return { success: false, message: 'No se encontró la configuración de Telegram' };
-  }
-  
-  const sent = await sendTelegramMessage(
-    `✅ <b>Prueba de Notificación</b>\n\n` +
-    `Las notificaciones de Telegram están funcionando correctamente.\n` +
-    `🕐 ${new Date().toLocaleString('es-MX')}`
-  );
-  
-  return sent 
-    ? { success: true, message: 'Notificación enviada correctamente' }
-    : { success: false, message: 'Error al enviar la notificación' };
 }

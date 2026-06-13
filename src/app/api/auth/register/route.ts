@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword, createSession } from '@/lib/auth';
-import { notifyNewUser } from '@/lib/telegram';
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,9 +28,6 @@ export async function POST(req: NextRequest) {
     });
     
     const token = await createSession(user.id);
-    
-    // Notify via Telegram (don't await to avoid blocking)
-    notifyNewUser(name, email).catch(() => {});
     
     const response = NextResponse.json({
       id: user.id,

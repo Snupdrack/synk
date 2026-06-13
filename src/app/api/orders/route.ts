@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
-import { notifyNewOrder } from '@/lib/telegram';
 
 export async function GET() {
   try {
@@ -82,9 +81,7 @@ export async function POST(req: NextRequest) {
       return newOrder;
     });
     
-    // Notify via Telegram
-    notifyNewOrder(order.id, user.name, service.name, service.price).catch(() => {});
-    
+    // Return response
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
     console.error('Create order error:', error);

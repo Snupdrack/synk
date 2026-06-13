@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
-import { notifyNewDeposit } from '@/lib/telegram';
 
 export async function GET() {
   try {
@@ -50,9 +49,6 @@ export async function POST(req: NextRequest) {
         notes: notes || null,
       },
     });
-    
-    // Notify via Telegram
-    notifyNewDeposit(user.name, amount, reference).catch(() => {});
     
     return NextResponse.json(transaction, { status: 201 });
   } catch (error) {
