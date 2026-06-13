@@ -21,7 +21,13 @@ export async function GET() {
       orderBy: [{ categorySlug: 'asc' }, { sortOrder: 'asc' }],
     });
     
-    return NextResponse.json(services);
+    // Map requiresData to fields for frontend
+    const mappedServices = services.map(s => ({
+      ...s,
+      fields: s.requiresData,
+    }));
+    
+    return NextResponse.json(mappedServices);
   } catch (error) {
     console.error('Admin services error:', error);
     return NextResponse.json({ error: 'Error al obtener servicios' }, { status: 500 });
@@ -35,7 +41,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
     }
     
-    const { name, description, price, deliveryTime, categorySlug, requiresData, icon, sortOrder, active } = await req.json();
+    const { name, description, price, deliveryTime, categorySlug, fields, icon, sortOrder, active } = await req.json();
     
     if (!name || price === undefined) {
       return NextResponse.json({ error: 'Nombre y precio son requeridos' }, { status: 400 });
@@ -53,7 +59,7 @@ export async function POST(req: NextRequest) {
         price: parseFloat(price),
         deliveryTime: deliveryTime || '',
         categorySlug,
-        requiresData: requiresData || '[]',
+        requiresData: JSON.stringify(fields || []),
         icon: icon || 'FileText',
         sortOrder: sortOrder || 0,
         active: active !== false,
@@ -61,7 +67,10 @@ export async function POST(req: NextRequest) {
       include: { category: true },
     });
     
-    return NextResponse.json(service, { status: 201 });
+    return NextResponse.json({
+      ...service,
+      fields: service.requiresData
+    }, { status: 201 });
   } catch (error) {
     console.error('Create service error:', error);
     return NextResponse.json({ error: 'Error al crear servicio' }, { status: 500 });

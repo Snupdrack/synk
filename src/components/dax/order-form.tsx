@@ -16,7 +16,7 @@ import { ArrowLeft, Clock, FileText, CreditCard, Building, Heart, Shield, Plane,
 import { useToast } from '@/hooks/use-toast';
 
 const iconMap: Record<string, any> = {
-  FileText, CreditCard, Building, Heart, Shield, Plane: FileText, Receipt: FileText, FileCheck: FileText,
+  FileText, CreditCard, Building, Heart, Shield, Plane, Receipt, FileCheck,
 };
 
 export function OrderFormView() {

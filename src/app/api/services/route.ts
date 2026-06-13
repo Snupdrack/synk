@@ -9,7 +9,13 @@ export async function GET() {
       orderBy: [{ categorySlug: 'asc' }, { sortOrder: 'asc' }],
     });
     
-    return NextResponse.json(services);
+    // Map requiresData to fields for frontend
+    const mappedServices = services.map(s => ({
+      ...s,
+      fields: s.requiresData,
+    }));
+    
+    return NextResponse.json(mappedServices);
   } catch (error) {
     console.error('Services error:', error);
     return NextResponse.json({ error: 'Error al obtener servicios' }, { status: 500 });

@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (body.price !== undefined) updateData.price = parseFloat(body.price);
     if (body.deliveryTime !== undefined) updateData.deliveryTime = body.deliveryTime;
     if (body.categorySlug !== undefined) updateData.categorySlug = body.categorySlug;
-    if (body.requiresData !== undefined) updateData.requiresData = body.requiresData;
+    if (body.fields !== undefined) updateData.requiresData = JSON.stringify(body.fields);
     if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.sortOrder !== undefined) updateData.sortOrder = body.sortOrder;
     if (body.active !== undefined) updateData.active = body.active;
@@ -38,8 +38,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       data: updateData,
       include: { category: true },
     });
-    
-    return NextResponse.json(service);
+
+    return NextResponse.json({
+      ...service,
+      fields: service.requiresData
+    });
   } catch (error) {
     console.error('Update service error:', error);
     return NextResponse.json({ error: 'Error al actualizar servicio' }, { status: 500 });
