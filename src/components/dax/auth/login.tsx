@@ -75,11 +75,6 @@ export function LoginView() {
                 </Button>
               </p>
             </div>
-            <div className="mt-4 p-3 bg-[#13131f] rounded-lg text-xs text-[#8888aa] border border-[rgba(0,240,255,0.12)]">
-              <p className="font-semibold mb-1 text-gray-300">Cuentas de prueba:</p>
-              <p>Admin: admin@tramfast.io / admin123</p>
-              <p>Usuario: juan@ejemplo.com / user123</p>
-            </div>
           </CardContent>
         </Card>
       </motion.div>

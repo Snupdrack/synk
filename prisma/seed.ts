@@ -10,7 +10,9 @@ async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
   const admin = await db.user.upsert({
     where: { email: 'admin@tramfast.io' },
-    update: {},
+    update: {
+      role: 'admin',
+    },
     create: {
       name: 'Administrador',
       email: 'admin@tramfast.io',
