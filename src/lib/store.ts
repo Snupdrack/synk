@@ -14,7 +14,9 @@ export type View =
   | 'admin-orders' 
   | 'admin-users' 
   | 'admin-transactions' 
-  | 'admin-settings';
+  | 'admin-settings'
+  | 'cookies'
+  | 'privacy';
 
 interface User {
   id: string;

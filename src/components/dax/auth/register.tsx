@@ -32,7 +32,7 @@ export function RegisterView() {
 
     const success = await register(name, email, password, phone);
     if (success) {
-      toast({ title: '¡Cuenta creada!', description: 'Bienvenido a SynkData' });
+      toast({ title: '¡Cuenta creada!', description: 'Bienvenido a DOCUFAST' });
       setView('dashboard');
     } else {
       setError('Error al crear cuenta. ¿El email ya está registrado?');

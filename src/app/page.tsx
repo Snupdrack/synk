@@ -17,6 +17,8 @@ import { AdminOrders } from '@/components/dax/admin-orders';
 import { AdminUsers } from '@/components/dax/admin-users';
 import { AdminTransactions } from '@/components/dax/admin-transactions';
 import { AdminSettings } from '@/components/dax/admin-settings';
+import { CookiesView } from '@/components/dax/cookies-view';
+import { PrivacyView } from '@/components/dax/privacy-view';
 
 function ViewRouter({ view }: { view: View }) {
   switch (view) {
@@ -48,6 +50,10 @@ function ViewRouter({ view }: { view: View }) {
       return <AdminTransactions />;
     case 'admin-settings':
       return <AdminSettings />;
+    case 'cookies':
+      return <CookiesView />;
+    case 'privacy':
+      return <PrivacyView />;
     default:
       return <HomeView />;
   }

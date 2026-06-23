@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { ArrowLeft, Clock, FileText, CreditCard, Building, Heart, Shield, Plane, Receipt, FileCheck, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Clock, FileText, CreditCard, Building, Heart, Shield, Plane, Receipt, FileCheck, AlertCircle, Loader2, CheckCircle2, Upload, Paperclip } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const iconMap: Record<string, any> = {
@@ -51,7 +51,7 @@ export function OrderFormView() {
   const handleSubmit = async () => {
     // Validate required fields
     for (const field of fields) {
-      if (field.required && !formData[field.key]?.trim()) {
+      if (field.required && !formData[field.key]) {
         toast({ title: 'Campo requerido', description: `Por favor completa: ${field.label}`, variant: 'destructive' });
         return;
       }
@@ -136,6 +136,61 @@ export function OrderFormView() {
                           ))}
                         </SelectContent>
                       </Select>
+                    ) : field.type === 'file' ? (
+                      <div className="space-y-2">
+                        <label
+                          htmlFor={field.key}
+                          className={`flex items-center gap-3 cursor-pointer border-2 border-dashed rounded-lg px-4 py-3 transition-colors ${
+                            formData[field.key]
+                              ? 'border-[#00f0ff] bg-[rgba(0,240,255,0.05)]'
+                              : 'border-[rgba(0,240,255,0.2)] hover:border-[rgba(0,240,255,0.5)] bg-[#07070d]'
+                          }`}
+                        >
+                          {formData[field.key] ? (
+                            <Paperclip className="w-5 h-5 text-[#00f0ff] flex-shrink-0" />
+                          ) : (
+                            <Upload className="w-5 h-5 text-[#8888aa] flex-shrink-0" />
+                          )}
+                          <span className="text-sm text-[#8888aa]">
+                            {formData[field.key]
+                              ? (formData[`${field.key}_name`] || 'Archivo cargado ✓')
+                              : (field.placeholder || 'Haz clic para cargar archivo')}
+                          </span>
+                        </label>
+                        <input
+                          id={field.key}
+                          type="file"
+                          accept={field.accept || '*/*'}
+                          className="hidden"
+                          onChange={e => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const reader = new FileReader();
+                            reader.onload = ev => {
+                              setFormData({
+                                ...formData,
+                                [field.key]: ev.target?.result as string,
+                                [`${field.key}_name`]: file.name,
+                              });
+                            };
+                            reader.readAsDataURL(file);
+                          }}
+                        />
+                        {formData[field.key] && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = { ...formData };
+                              delete updated[field.key];
+                              delete updated[`${field.key}_name`];
+                              setFormData(updated);
+                            }}
+                            className="text-xs text-red-400 hover:text-red-300"
+                          >
+                            Eliminar archivo
+                          </button>
+                        )}
+                      </div>
                     ) : (
                       <Input
                         id={field.key}

@@ -1,38 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" xml:space="preserve">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <rect width="40" height="40" rx="10" fill="url(#grad)"/>
+  <path d="M10 10h12a8 8 0 0 1 0 16H10V10z" fill="rgba(255,255,255,0.15)"/>
+  <path d="M10 10h12a8 8 0 0 1 0 16H10V10z" stroke="#00f0ff" stroke-width="1.5" fill="none"/>
+  <path d="M27 18h3l-4 8h-3" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 14h7a4 4 0 0 1 0 8h-7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
   <defs>
-    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00AAFF"/>
-      <stop offset="100%" style="stop-color:#0077CC"/>
-    </linearGradient>
-    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#E0E0E0"/>
-      <stop offset="50%" style="stop-color:#A0A0A0"/>
-      <stop offset="100%" style="stop-color:#C0C0C0"/>
+    <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a0a1a"/>
+      <stop offset="100%" stop-color="#13131f"/>
     </linearGradient>
   </defs>
-  <!-- Circular arcs -->
-  <path d="M 60 30 A 70 70 0 0 1 180 20" fill="none" stroke="url(#blueGrad)" stroke-width="3" stroke-linecap="round"/>
-  <path d="M 220 140 A 70 70 0 0 1 340 130" fill="none" stroke="url(#blueGrad)" stroke-width="3" stroke-linecap="round"/>
-  <!-- Pixel accents top-right -->
-  <rect x="310" y="15" width="5" height="5" fill="#0099FF" opacity="0.9"/>
-  <rect x="320" y="10" width="4" height="4" fill="#0099FF" opacity="0.7"/>
-  <rect x="328" y="5" width="3" height="3" fill="#0099FF" opacity="0.5"/>
-  <rect x="334" y="1" width="2" height="2" fill="#0099FF" opacity="0.3"/>
-  <!-- Pixel accents bottom-left -->
-  <rect x="60" y="145" width="5" height="5" fill="#0099FF" opacity="0.9"/>
-  <rect x="50" y="148" width="4" height="4" fill="#0099FF" opacity="0.7"/>
-  <rect x="42" y="152" width="3" height="3" fill="#0099FF" opacity="0.5"/>
-  <rect x="36" y="155" width="2" height="2" fill="#0099FF" opacity="0.3"/>
-  <!-- D letter (silver) -->
-  <text x="80" y="115" font-family="Arial Black, Impact, sans-serif" font-size="100" font-weight="900" fill="url(#silverGrad)">D</text>
-  <!-- A letter (blue) -->
-  <text x="155" y="115" font-family="Arial Black, Impact, sans-serif" font-size="100" font-weight="900" fill="url(#blueGrad)">A</text>
-  <!-- X letter (silver with blue stripe) -->
-  <text x="245" y="115" font-family="Arial Black, Impact, sans-serif" font-size="100" font-weight="900" fill="url(#silverGrad)">X</text>
-  <!-- Divider lines -->
-  <line x1="110" y1="130" x2="155" y2="130" stroke="#0099FF" stroke-width="2"/>
-  <line x1="245" y1="130" x2="290" y2="130" stroke="#0099FF" stroke-width="2"/>
-  <!-- Tagline -->
-  <text x="200" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">SERVICIOS DIGITALES</text>
 </svg>

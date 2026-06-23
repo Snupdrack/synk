@@ -26,8 +26,8 @@ export function DaxLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 bg-[#07070d]/95 backdrop-blur-xl border-b border-[rgba(0,240,255,0.12)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <button onClick={() => handleNav('home')} className="flex items-center gap-2">
-            <img src="/logo.svg" alt="SynkData" className="h-8 w-auto drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]" />
-            <span className="text-xl font-bold bg-gradient-to-r from-[#00f0ff] to-[#9d00ff] bg-clip-text text-transparent">SynkData</span>
+            <img src="/logo.svg" alt="DOCUFAST" className="h-8 w-auto drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]" />
+            <span className="text-xl font-bold bg-gradient-to-r from-[#00f0ff] to-[#9d00ff] bg-clip-text text-transparent">DOCUFAST</span>
             <span className="hidden sm:inline text-xs text-[#8888aa] border-l border-[rgba(0,240,255,0.12)] pl-2 ml-1">Servicios Digitales</span>
           </button>
 
@@ -118,8 +118,8 @@ export function DaxLayout({ children }: { children: React.ReactNode }) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <img src="/logo.svg" alt="SynkData" className="h-8 w-auto drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]" />
-                <span className="text-lg font-bold bg-gradient-to-r from-[#00f0ff] to-[#9d00ff] bg-clip-text text-transparent">SynkData</span>
+                <img src="/logo.svg" alt="DOCUFAST" className="h-8 w-auto drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]" />
+                <span className="text-lg font-bold bg-gradient-to-r from-[#00f0ff] to-[#9d00ff] bg-clip-text text-transparent">DOCUFAST</span>
               </div>
               <p className="text-sm">Código a Medida. Inteligencia en cada Dato.</p>
             </div>
@@ -144,8 +144,13 @@ export function DaxLayout({ children }: { children: React.ReactNode }) {
               </ul>
             </div>
           </div>
-          <div className="border-t border-[rgba(0,240,255,0.12)] mt-6 pt-4 text-center text-sm">
-            © {new Date().getFullYear()} SynkData Servicios Digitales. Todos los derechos reservados.
+          <div className="border-t border-[rgba(0,240,255,0.12)] mt-6 pt-4 text-center text-sm space-y-2">
+            <div className="flex items-center justify-center gap-4">
+              <button onClick={() => handleNav('cookies' as any)} className="text-[#8888aa] hover:text-[#00f0ff] transition-colors">Política de Cookies</button>
+              <span className="text-[rgba(0,240,255,0.2)]">|</span>
+              <button onClick={() => handleNav('privacy' as any)} className="text-[#8888aa] hover:text-[#00f0ff] transition-colors">Aviso de Privacidad</button>
+            </div>
+            <div>© {new Date().getFullYear()} DOCUFAST Servicios Digitales. Todos los derechos reservados.</div>
           </div>
         </div>
       </footer>

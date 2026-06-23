@@ -135,11 +135,46 @@ export function AdminOrders() {
               <DialogTitle className="text-white">Actualizar Pedido {editingOrder?.id?.slice(-8)}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-4">
-              <div>
+              <div className="space-y-1">
                 <p className="text-sm text-[#8888aa]">Cliente: <strong className="text-white">{editingOrder?.user?.name}</strong></p>
+                <p className="text-sm text-[#8888aa]">Email: <strong className="text-white">{editingOrder?.user?.email}</strong></p>
                 <p className="text-sm text-[#8888aa]">Servicio: <strong className="text-white">{editingOrder?.service?.name}</strong></p>
                 <p className="text-sm text-[#8888aa]">Total: <strong className="text-[#00f0ff]">${editingOrder?.total?.toFixed(2)}</strong></p>
+                {editingOrder?.notes && (
+                  <p className="text-sm text-[#8888aa]">Notas: <strong className="text-white">{editingOrder.notes}</strong></p>
+                )}
               </div>
+              {/* Datos del formulario */}
+              {(() => {
+                let fd: Record<string, string> = {};
+                try { fd = JSON.parse(editingOrder?.formData || '{}'); } catch {}
+                const entries = Object.entries(fd).filter(([, v]) => v);
+                if (entries.length === 0) return null;
+                return (
+                  <div className="border border-[rgba(0,240,255,0.12)] rounded-lg p-3 bg-[#07070d]">
+                    <p className="text-xs font-semibold text-[#00f0ff] mb-2 uppercase tracking-wide">Datos del formulario</p>
+                    <div className="space-y-1.5">
+                      {entries.map(([key, value]) => (
+                        <div key={key} className="flex flex-col sm:flex-row sm:gap-2">
+                          <span className="text-xs text-[#8888aa] capitalize min-w-[120px]">{key.replace(/_/g, ' ')}:</span>
+                          {String(value).startsWith('data:') ? (
+                            <a
+                              href={String(value)}
+                              download={`archivo_${key}`}
+                              className="text-xs text-[#00f0ff] hover:underline"
+                            >
+                              📎 Descargar archivo adjunto
+                            </a>
+                          ) : (
+                            <span className="text-xs text-white font-medium break-all">{String(value)}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-200">Estado</label>
                 <Select value={newStatus} onValueChange={setNewStatus}>

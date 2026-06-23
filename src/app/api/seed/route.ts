@@ -241,7 +241,7 @@ export async function POST() {
         { key: 'bank_reference', value: 'PANELTRAMITES' },
         { key: 'min_payment', value: '250' },
         { key: 'max_payment', value: '50000' },
-        { key: 'site_name', value: 'SynkData' },
+        { key: 'site_name', value: 'DOCUFAST' },
         { key: 'site_description', value: 'Plataforma de Trámites Digitales' },
         { key: 'whatsapp', value: '8146954100' },
         { key: 'support_email', value: 'soporte@synkdata.online' },
