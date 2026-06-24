@@ -86,7 +86,8 @@ export function AdminServices() {
         resetForm();
         await fetchServices();
       } else {
-        toast({ title: 'Error', description: 'Error al guardar', variant: 'destructive' });
+        const errData = await res.json().catch(() => ({}));
+        toast({ title: 'Error', description: errData.error || 'Error al guardar', variant: 'destructive' });
       }
     } catch {
       toast({ title: 'Error', description: 'Error de conexión', variant: 'destructive' });

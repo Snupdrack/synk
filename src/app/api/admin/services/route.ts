@@ -113,8 +113,14 @@ export async function POST(req: NextRequest) {
       ...service,
       fields: JSON.stringify(normalizedFields)
     }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create service error:', error);
+    if (error?.code === 'P2003' || error?.message?.includes('Foreign key')) {
+      return NextResponse.json({ error: 'La categoría especificada no existe en la base de datos' }, { status: 400 });
+    }
+    if (error?.code === 'P2002') {
+      return NextResponse.json({ error: 'Ya existe un servicio con ese nombre (slug duplicado)' }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Error al crear servicio' }, { status: 500 });
   }
 }
