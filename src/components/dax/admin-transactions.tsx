@@ -4,10 +4,15 @@ import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
-import { ArrowLeft, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, CheckCircle, XCircle, Clock, Pencil, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const typeConfig: Record<string, { label: string; color: string }> = {
@@ -26,6 +31,15 @@ export function AdminTransactions() {
   const { adminTransactions, fetchAdminTransactions, setView } = useStore();
   const { toast } = useToast();
 
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingTx, setEditingTx] = useState<any>(null);
+  const [editAmount, setEditAmount] = useState('');
+  const [editType, setEditType] = useState('');
+  const [editStatus, setEditStatus] = useState('');
+  const [editReference, setEditReference] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => { fetchAdminTransactions(); }, [fetchAdminTransactions]);
 
   const handleAction = async (id: string, action: 'approved' | 'rejected') => {
@@ -43,6 +57,51 @@ export function AdminTransactions() {
       }
     } catch {
       toast({ title: 'Error', description: 'Error de conexión', variant: 'destructive' });
+    }
+  };
+
+  const openEdit = (tx: any) => {
+    setEditingTx(tx);
+    setEditAmount(String(tx.amount ?? ''));
+    setEditType(tx.type ?? 'deposit');
+    setEditStatus(tx.status ?? 'pending');
+    setEditReference(tx.reference ?? '');
+    setEditNotes(tx.notes ?? '');
+    setEditOpen(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingTx) return;
+    const parsedAmount = parseFloat(editAmount);
+    if (Number.isNaN(parsedAmount)) {
+      toast({ title: 'Error', description: 'El monto debe ser un número válido', variant: 'destructive' });
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/transactions/${editingTx.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: parsedAmount,
+          type: editType,
+          status: editStatus,
+          reference: editReference,
+          notes: editNotes,
+        }),
+      });
+      if (res.ok) {
+        toast({ title: 'Datos de pago actualizados' });
+        setEditOpen(false);
+        await fetchAdminTransactions();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        toast({ title: 'Error', description: data.error || 'Error al actualizar', variant: 'destructive' });
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Error de conexión', variant: 'destructive' });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -91,18 +150,21 @@ export function AdminTransactions() {
                         <TableCell><Badge className={`${statusConf.color} border-0`}>{statusConf.label}</Badge></TableCell>
                         <TableCell className="text-xs text-[#8888aa]">{new Date(tx.createdAt).toLocaleDateString('es-MX')}</TableCell>
                         <TableCell className="text-right">
-                          {tx.type === 'deposit' && tx.status === 'pending' ? (
-                            <div className="flex justify-end gap-1">
-                              <Button variant="ghost" size="sm" className="text-[#39ff14] hover:text-[#39ff14]/80" onClick={() => handleAction(tx.id, 'approved')}>
-                                <CheckCircle className="w-4 h-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300" onClick={() => handleAction(tx.id, 'rejected')}>
-                                <XCircle className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <span className="text-xs text-[#8888aa]">-</span>
-                          )}
+                          <div className="flex justify-end gap-1">
+                            {tx.type === 'deposit' && tx.status === 'pending' && (
+                              <>
+                                <Button variant="ghost" size="sm" className="text-[#39ff14] hover:text-[#39ff14]/80" onClick={() => handleAction(tx.id, 'approved')}>
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300" onClick={() => handleAction(tx.id, 'rejected')}>
+                                  <XCircle className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                            <Button variant="ghost" size="sm" className="text-[#8888aa] hover:text-[#00f0ff]" onClick={() => openEdit(tx)}>
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
@@ -113,6 +175,104 @@ export function AdminTransactions() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] max-w-lg w-full p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-0">
+            <DialogTitle className="text-white">
+              Editar datos de pago <span className="font-mono text-[#00f0ff]">{editingTx?.id?.slice(-8)}</span>
+            </DialogTitle>
+          </DialogHeader>
+
+          <ScrollArea className="max-h-[75vh]">
+            <div className="px-6 py-4 space-y-4">
+
+              {/* Info básica */}
+              <div className="space-y-1">
+                <p className="text-sm text-[#8888aa]">Usuario: <strong className="text-white">{editingTx?.user?.name}</strong></p>
+                <p className="text-sm text-[#8888aa]">Email: <strong className="text-white">{editingTx?.user?.email}</strong></p>
+                {editingTx?.createdAt && (
+                  <p className="text-sm text-[#8888aa]">Fecha: <strong className="text-white">{new Date(editingTx.createdAt).toLocaleString('es-MX')}</strong></p>
+                )}
+              </div>
+
+              {/* Monto */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-200">Monto</label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={editAmount}
+                  onChange={e => setEditAmount(e.target.value)}
+                  className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] text-white"
+                />
+              </div>
+
+              {/* Tipo */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-200">Tipo</label>
+                <Select value={editType} onValueChange={setEditType}>
+                  <SelectTrigger className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="deposit">Recarga</SelectItem>
+                    <SelectItem value="payment">Pago</SelectItem>
+                    <SelectItem value="refund">Reembolso</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Estado */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-200">Estado</label>
+                <Select value={editStatus} onValueChange={setEditStatus}>
+                  <SelectTrigger className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pendiente</SelectItem>
+                    <SelectItem value="approved">Aprobado</SelectItem>
+                    <SelectItem value="rejected">Rechazado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Referencia */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-200">Referencia / Comprobante</label>
+                <Input
+                  value={editReference}
+                  onChange={e => setEditReference(e.target.value)}
+                  placeholder="Referencia de pago"
+                  className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] text-white placeholder:text-[#8888aa]"
+                />
+              </div>
+
+              {/* Notas */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-200">Notas</label>
+                <Textarea
+                  value={editNotes}
+                  onChange={e => setEditNotes(e.target.value)}
+                  placeholder="Notas internas..."
+                  className="bg-[#0f0f1a] border-[rgba(0,240,255,0.12)] text-white placeholder:text-[#8888aa]"
+                />
+              </div>
+
+              {/* Guardar */}
+              <Button
+                onClick={handleSaveEdit}
+                className="w-full bg-[#00f0ff] text-[#07070d] hover:bg-[#00d4e0] font-semibold"
+                disabled={saving}
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Guardar cambios'}
+              </Button>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
