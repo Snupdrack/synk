@@ -105,11 +105,11 @@ export function DashboardWallet() {
                       <Info className="h-4 w-4 text-[#00f0ff]" />
                       <AlertDescription className="text-[#00f0ff] text-sm">
                         <strong>Datos bancarios:</strong><br />
-                        Banco: SANTANDER<br />
-                        CLABE: 0146 1014 0229 4278 94<br />
-                        Titular: EVANGELINA GARCIA<br />
-                        Concepto: PANELTRAMITES<br />
-                        Mínimo: $250 MXN
+                        Banco: BANORTE<br />
+                        CLABE: 0725 8001 3742 7967 48<br />
+                        Titular: CARLOS A. MARTINEZ<br />
+                        Concepto: PANEL<br />
+                        Mínimo: $150 MXN
                       </AlertDescription>
                     </Alert>
                     <div className="space-y-2">
