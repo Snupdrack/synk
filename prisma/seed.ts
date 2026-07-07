@@ -208,11 +208,11 @@ async function main() {
 
   // Default site config
   const configs = [
-    { key: 'bank_name', value: 'SANTANDER' },
-    { key: 'bank_clabe', value: '0146 1014 0229 4278 94' },
-    { key: 'bank_reference', value: 'PANELTRAMITES' },
-    { key: 'bank_account', value: 'EVANGELINA GARCIA' },
-    { key: 'min_payment', value: '250' },
+    { key: 'bank_name', value: 'BANORTE' },
+    { key: 'bank_clabe', value: '0725 8001 3742 7967 48' },
+    { key: 'bank_reference', value: 'PANEL' },
+    { key: 'bank_account', value: 'CARLOS A. MARTINEZ' },
+    { key: 'min_payment', value: '150' },
     { key: 'max_payment', value: '50000' },
     { key: 'site_name', value: 'TramFast' },
     { key: 'site_description', value: 'Plataforma de Trámites Digitales' },
