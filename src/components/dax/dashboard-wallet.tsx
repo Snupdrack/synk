@@ -109,7 +109,7 @@ export function DashboardWallet() {
                         CLABE: 0725 8001 3742 7967 48<br />
                         Titular: CARLOS A. MARTINEZ<br />
                         Concepto: PANEL<br />
-                        Mínimo: $150 MXN
+                        Mínimo: $200 MXN
                       </AlertDescription>
                     </Alert>
                     <div className="space-y-2">

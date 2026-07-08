@@ -212,7 +212,7 @@ async function main() {
     { key: 'bank_clabe', value: '0725 8001 3742 7967 48' },
     { key: 'bank_reference', value: 'PANEL' },
     { key: 'bank_account', value: 'CARLOS A. MARTINEZ' },
-    { key: 'min_payment', value: '150' },
+    { key: 'min_payment', value: '200' },
     { key: 'max_payment', value: '50000' },
     { key: 'site_name', value: 'TramFast' },
     { key: 'site_description', value: 'Plataforma de Trámites Digitales' },
