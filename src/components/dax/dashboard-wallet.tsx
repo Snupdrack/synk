@@ -105,9 +105,9 @@ export function DashboardWallet() {
                       <Info className="h-4 w-4 text-[#00f0ff]" />
                       <AlertDescription className="text-[#00f0ff] text-sm">
                         <strong>Datos bancarios:</strong><br />
-                        Banco: BANORTE<br />
-                        CLABE: 0725 8001 3742 7967 48<br />
-                        Titular: CARLOS A. MARTINEZ<br />
+                        Banco: NUBANK<br />
+                        CLABE: 6381 8001 0149 4012 37<br />
+                        Titular: CESAR GARCIA<br />
                         Concepto: PANEL<br />
                         Mínimo: $200 MXN
                       </AlertDescription>
