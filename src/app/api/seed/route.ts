@@ -236,8 +236,9 @@ export async function POST() {
     await db.setting.createMany({
       data: [
         { key: 'bank_name', value: 'BANORTE' },
-        { key: 'bank_clabe', value: '0725 8001 3742 7967 48' },
-        { key: 'bank_account', value: 'CARLOS A. MARTINEZ' },
+        { key: 'bank_clabe', value: '072580013880266884' },
+        { key: 'bank_account', value: '072580013880266884' },
+        { key: 'bank_holder', value: 'ANGEL A ACOSTA' },
         { key: 'bank_reference', value: 'PANEL' },
         { key: 'min_payment', value: '200' },
         { key: 'max_payment', value: '50000' },

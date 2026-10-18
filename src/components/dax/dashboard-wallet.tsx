@@ -107,7 +107,7 @@ export function DashboardWallet() {
                         <strong>Datos bancarios:</strong><br />
                         Banco: BANORTE<br />
                         CLABE: 072580013880266884<br />
-                        Titular: ANGEL ALESSANDRO ACOSTA MEZA<br />
+                        Titular: ANGEL A ACOSTA<br />
                         Concepto: PANEL<br />
                         Mínimo: $200 MXN
                       </AlertDescription>
